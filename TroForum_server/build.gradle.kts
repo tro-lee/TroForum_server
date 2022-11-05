@@ -17,19 +17,10 @@ repositories {
 }
 
 dependencies {
-	//web
 	implementation("org.springframework.boot:spring-boot-starter-web")
-	//数据库
-	implementation("org.springframework.boot:spring-boot-starter-jdbc")
-	implementation("com.baomidou:mybatis-plus-boot-starter:3.5.2")
-	implementation("mysql:mysql-connector-java")
-	//基础环境
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
-	//默认把所有类设置open类的插件
-	implementation("org.jetbrains.kotlin:kotlin-noarg")
-	implementation("org.jetbrains.kotlin:kotlin-allopen")
 }
 
 tasks.withType<KotlinCompile> {
