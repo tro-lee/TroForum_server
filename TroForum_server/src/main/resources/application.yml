@@ -1,2 +1,8 @@
 server:
   port: 8080
+spring:
+  datasource:
+    url: jdbc:mysql://ruibest.club:3306/TroForum?useUnicode=true&characterEncoding=UTF-8&useSSL=false&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2B8
+    username: tro
+    password: 1482501212@qq
+    driver-class-name: com.mysql.jdbc.Driver
