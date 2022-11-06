@@ -30,6 +30,8 @@ dependencies {
 	//默认把所有类设置open类的插件
 	implementation("org.jetbrains.kotlin:kotlin-noarg")
 	implementation("org.jetbrains.kotlin:kotlin-allopen")
+	//密码
+	implementation("cn.dev33:sa-token-spring-boot-starter:1.30.0")
 }
 
 tasks.withType<KotlinCompile> {
