@@ -32,6 +32,8 @@ dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-allopen")
 	//密码
 	implementation("cn.dev33:sa-token-spring-boot-starter:1.30.0")
+	// json
+	implementation("com.alibaba:fastjson:1.2.79")
 }
 
 tasks.withType<KotlinCompile> {

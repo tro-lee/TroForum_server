@@ -1,7 +1,8 @@
-package com.troForum_server.application.login
+package com.troForum_server.application.common
 
 import cn.dev33.satoken.secure.BCrypt
 import cn.dev33.satoken.stp.StpUtil
+import cn.dev33.satoken.util.SaResult
 import com.troForum_server.domain.entity.account.Account
 import com.troForum_server.domain.service.AccountRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -18,14 +19,21 @@ class LoginService {
         var account = Account()
         account.userId = timestamp.toEpochMilli().toString() + (100..999).random().toString()
         account.userName = userName
+        if ( accountRepository.checkingUserName(userName) ) {
+            throw Exception("用户名重复")
+        }
         account.password = BCrypt.hashpw(password, BCrypt.gensalt())
         account.role = "user"
         account.deleted = 0
-        accountRepository.insertAccount(account)
+        try {
+            accountRepository.insertAccount(account)
+        } catch (e: Exception) {
+            throw Exception("注册失败")
+        }
     }
 
     fun login(userName: String, password: String) {
-        val user = accountRepository.selectName(userName)
+        val user = accountRepository.selectAccountByName(userName)
             ?: throw Exception("未查找到该用户")
         if (BCrypt.checkpw(password, user.password)) {
             StpUtil.login(user.userId)
