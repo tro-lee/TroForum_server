@@ -11,6 +11,7 @@ import java.lang.Exception
 class GlobalExceptionHandler {
     @ExceptionHandler
     fun handlerException(exception: Exception): SaResult? {
+        exception.printStackTrace()
         if ( exception is NotLoginException ) {
             return SaResult.code(501)
         }
