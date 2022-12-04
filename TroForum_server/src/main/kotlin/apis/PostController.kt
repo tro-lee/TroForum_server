@@ -1,6 +1,8 @@
 package com.troForum_server.apis
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page
 import com.troForum_server.application.post.PostService
+import com.troForum_server.domain.entity.post.TopicPost
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -24,19 +26,33 @@ class PostController {
     @PostMapping("/topicPost")
     fun insertTopicPost(@RequestBody req: InsertTopicPostReq) {
         postService.insertTopicPost(
-            req.authorId, req.content, req.title, req.theme, req.introduction)
+            req.authorId, req.content, req.title, req.theme, req.introduction
+        )
     }
 
-    data class InsertReplyPost(
+    data class InsertReplyPostReq(
         val authorId: String,
         val content: String,
         val master: String
     )
 
     @PostMapping("/replyPost")
-    fun insertReplyPost(@RequestBody req: InsertReplyPost) {
+    fun insertReplyPost(@RequestBody req: InsertReplyPostReq) {
         postService.insertReplyPost(
             req.authorId, req.content, req.master
+        )
+    }
+
+    data class GetTopicPostPageReq(
+        val current: Long,
+        val size: Long,
+        val keyword: String
+    )
+
+    @PostMapping("/topicPostPage")
+    fun getTopicPostPage(@RequestBody req: GetTopicPostPageReq): MutableList<TopicPost> {
+        return postService.getTopicPostPage(
+            req.current, req.size, req.keyword
         )
     }
 }

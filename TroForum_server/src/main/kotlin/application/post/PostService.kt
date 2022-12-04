@@ -1,14 +1,13 @@
 package com.troForum_server.application.post
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page
+import com.troForum_server.domain.entity.post.ReplyPost
+import com.troForum_server.domain.entity.post.TopicPost
 import com.troForum_server.domain.service.PostRepository
-import com.troForum_server.domain.service.ReplyPost
-import com.troForum_server.domain.service.TopicPost
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
 import java.time.Instant
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.util.*
 
 @Service
 class PostService {
@@ -21,10 +20,10 @@ class PostService {
         theme: String, introduction: String
     ) {
         //判断是否违规
-        if ( content.length > 3000 ) {
+        if (content.length > 3000) {
             throw Exception("字数超出3000字")
         }
-        if ( introduction.length > 64 || title.length > 32 ) {
+        if (introduction.length > 64 || title.length > 32) {
             throw Exception("引言或标题过长")
         }
         val topicPost = TopicPost()
@@ -42,7 +41,7 @@ class PostService {
         authorId: String, content: String, master: String
     ) {
         //判断是否违规
-        if ( content.length > 3000 ) {
+        if (content.length > 3000) {
             throw Exception("字数超出3000字")
         }
         val replyPost = ReplyPost()
@@ -57,5 +56,15 @@ class PostService {
             throw Exception("发帖失败")
         }
 
+    }
+
+    //获得主题页
+    @Cacheable("TopicPostPage")
+    fun getTopicPostPage(current: Long, size: Long, keyword: String): MutableList<TopicPost> {
+        return try {
+            postRepository.getTopicPostPage(Page(current, size), keyword).records
+        } catch (e: Exception) {
+            throw e
+        }
     }
 }
