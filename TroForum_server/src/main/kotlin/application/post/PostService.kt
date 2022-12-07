@@ -5,16 +5,20 @@ import com.troForum_server.domain.entity.post.ReplyPost
 import com.troForum_server.domain.entity.post.TopicPost
 import com.troForum_server.domain.service.PostRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.cache.annotation.CacheConfig
+import org.springframework.cache.annotation.CacheEvict
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
 import java.time.Instant
 
 @Service
+@CacheConfig(cacheNames = ["post"])
 class PostService {
     @Autowired
     private lateinit var postRepository: PostRepository
 
     //插入主题帖
+    @CacheEvict(value = ["topicPostPage"], allEntries = true)
     fun insertTopicPost(
         authorId: String, content: String, title: String,
         theme: String, introduction: String
@@ -59,9 +63,10 @@ class PostService {
     }
 
     //获得主题页
-    @Cacheable("TopicPostPage")
+    @Cacheable("topicPostPage")
     fun getTopicPostPage(current: Long, size: Long, keyword: String): MutableList<TopicPost> {
         return try {
+            println("try")
             postRepository.getTopicPostPage(Page(current, size), keyword).records
         } catch (e: Exception) {
             throw e

@@ -23,6 +23,8 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-jdbc")
 	implementation("com.baomidou:mybatis-plus-boot-starter:3.5.2")
 	implementation("mysql:mysql-connector-java")
+	//缓存
+	implementation("org.springframework.boot:spring-boot-starter-cache")
 	//基础环境
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")

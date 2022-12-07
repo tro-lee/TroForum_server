@@ -1,6 +1,5 @@
 package com.troForum_server.apis
-
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page
+import cn.dev33.satoken.annotation.SaCheckLogin
 import com.troForum_server.application.post.PostService
 import com.troForum_server.domain.entity.post.TopicPost
 import org.springframework.beans.factory.annotation.Autowired
@@ -10,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
+@SaCheckLogin
 @RequestMapping("/post")
 class PostController {
     @Autowired
