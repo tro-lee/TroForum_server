@@ -14,4 +14,8 @@ class AccountService {
     fun selectAccount(): Account? {
         return accountRepository.selectAccountById((StpUtil.getLoginId().toString()))
     }
+
+    fun selectAccountById(userId: String): Account? {
+        return accountRepository.selectAccountById(userId)
+    }
 }

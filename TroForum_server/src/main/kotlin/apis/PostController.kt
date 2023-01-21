@@ -1,7 +1,10 @@
 package com.troForum_server.apis
 import cn.dev33.satoken.annotation.SaCheckLogin
+import com.alibaba.fastjson.JSONArray
+import com.alibaba.fastjson.JSONObject
 import com.troForum_server.application.post.PostService
 import com.troForum_server.domain.entity.post.TopicPost
+import com.troForum_server.infrastructure.common.result
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -20,13 +23,12 @@ class PostController {
         val content: String,
         val title: String,
         val theme: String,
-        val introduction: String
     )
 
     @PostMapping("/topicPost")
     fun insertTopicPost(@RequestBody req: InsertTopicPostReq) {
         postService.insertTopicPost(
-            req.authorId, req.content, req.title, req.theme, req.introduction
+            req.authorId, req.content, req.title, req.theme
         )
     }
 
@@ -50,8 +52,8 @@ class PostController {
     )
 
     @PostMapping("/topicPostPage")
-    fun getTopicPostPage(@RequestBody req: GetTopicPostPageReq): MutableList<TopicPost> {
-        return postService.getTopicPostPage(
+    fun getTopicPostPage(@RequestBody req: GetTopicPostPageReq) = result {
+        return@result postService.getTopicPostPage(
             req.current, req.size, req.keyword
         )
     }

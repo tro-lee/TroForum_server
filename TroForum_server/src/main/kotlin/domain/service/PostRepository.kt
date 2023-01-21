@@ -32,9 +32,9 @@ class PostRepository(
             QueryWrapper<TopicPost>()
                 .like("title", keyword)
                 .or()
-                .like("introduction", keyword)
                 .orderByDesc("likes")
-                .orderByAsc("created_time")
+                .orderByDesc("created_time")
+                .eq("deleted", 0)
         )
     }
 

@@ -15,7 +15,6 @@ class TopicPost {
     var likes: Int = 0
     var title: String = ""
     var theme: String = ""
-    var introduction: String = ""
     var clickRate: Int = 0
 }
 

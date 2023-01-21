@@ -1,9 +1,13 @@
 package com.troForum_server.application.post
 
+import com.alibaba.fastjson.JSONArray
+import com.alibaba.fastjson.JSONObject
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page
+import com.troForum_server.application.account.AccountService
 import com.troForum_server.domain.entity.post.ReplyPost
 import com.troForum_server.domain.entity.post.TopicPost
 import com.troForum_server.domain.service.PostRepository
+import com.troForum_server.infrastructure.common.toJsonWrapper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.CacheEvict
@@ -16,19 +20,21 @@ import java.time.Instant
 class PostService {
     @Autowired
     private lateinit var postRepository: PostRepository
+    @Autowired
+    private lateinit var accountService: AccountService
 
     //插入主题帖
     @CacheEvict(value = ["topicPostPage"], allEntries = true)
     fun insertTopicPost(
         authorId: String, content: String, title: String,
-        theme: String, introduction: String
+        theme: String
     ) {
         //判断是否违规
         if (content.length > 3000) {
             throw Exception("字数超出3000字")
         }
-        if (introduction.length > 64 || title.length > 32) {
-            throw Exception("引言或标题过长")
+        if (title.length > 32) {
+            throw Exception("标题过长")
         }
         val topicPost = TopicPost()
         val timestamp = Instant.now()
@@ -36,7 +42,6 @@ class PostService {
         topicPost.authorId = authorId
         topicPost.content = content
         topicPost.title = title
-        topicPost.introduction = introduction
         postRepository.insertTopicPost(topicPost)
     }
 
@@ -63,11 +68,21 @@ class PostService {
     }
 
     //获得主题页
-    @Cacheable("topicPostPage")
-    fun getTopicPostPage(current: Long, size: Long, keyword: String): MutableList<TopicPost> {
+    fun getTopicPostPage(current: Long, size: Long, keyword: String): JSONObject {
+        fun Page<TopicPost>.toJson(): JSONObject {
+            val res = this.toJsonWrapper()
+            val data = JSONArray()
+            records.forEach {
+                val json = JSONObject.toJSON(it) as JSONObject
+                json["userName"] = accountService.selectAccountById(it.authorId)?.userName
+                json.remove("content")
+                data.add(json)
+            }
+            res["value"] = data
+            return res
+        }
         return try {
-            println("try")
-            postRepository.getTopicPostPage(Page(current, size), keyword).records
+            postRepository.getTopicPostPage(Page(current, size), keyword).toJson()
         } catch (e: Exception) {
             throw e
         }
