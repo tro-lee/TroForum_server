@@ -25,7 +25,7 @@ class PostRepository(
         replyPostMapper.insert(replyPost)
     }
 
-    //获得主题帖
+    //获得主题页
     fun getTopicPostPage(page: Page<TopicPost>, keyword: String): Page<TopicPost> {
         return topicPostMapper.selectPage(
             page,
@@ -38,4 +38,11 @@ class PostRepository(
         )
     }
 
+    //获取主题贴
+    fun getTopicPost(postId: String): TopicPost? {
+        return topicPostMapper.selectOne(
+                QueryWrapper<TopicPost>()
+                    .eq("post_id", postId)
+            )
+    }
 }

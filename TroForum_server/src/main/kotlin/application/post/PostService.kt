@@ -87,4 +87,13 @@ class PostService {
             throw e
         }
     }
+
+    //获取主题贴
+    fun getTopicPost(postId: String): JSONObject? {
+        val data = postRepository.getTopicPost(postId) ?: throw Exception("返回主页")
+        val json = JSONObject.toJSON(data) as JSONObject
+        json["userName"] = accountService.selectAccountById(data.authorId)?.userName
+        return json
+    }
+
 }

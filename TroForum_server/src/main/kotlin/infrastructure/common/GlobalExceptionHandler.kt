@@ -15,6 +15,9 @@ class GlobalExceptionHandler {
         if ( exception is NotLoginException ) {
             return SaResult.code(501)
         }
+        if ( exception.message === "返回主页" ) {
+            return SaResult.code(502)
+        }
         return SaResult.error(exception.message)
     }
 }
