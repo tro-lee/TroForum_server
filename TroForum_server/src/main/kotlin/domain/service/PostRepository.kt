@@ -22,7 +22,11 @@ class PostRepository(
 
     //插入回复贴
     fun insertReplyPost(replyPost: ReplyPost) {
-        replyPostMapper.insert(replyPost)
+        try {
+            replyPostMapper.insert(replyPost)
+        } catch (e: Exception) {
+            throw e
+        }
     }
 
     //获得主题页
@@ -32,6 +36,18 @@ class PostRepository(
             QueryWrapper<TopicPost>()
                 .like("title", keyword)
                 .or()
+                .orderByDesc("likes")
+                .orderByDesc("created_time")
+                .eq("deleted", 0)
+        )
+    }
+
+    //获得回复贴
+    fun getReplyPostPage(page: Page<ReplyPost>, keyword: String): Page<ReplyPost> {
+        return replyPostMapper.selectPage(
+            page,
+            QueryWrapper<ReplyPost>()
+                .eq("master", keyword)
                 .orderByDesc("likes")
                 .orderByDesc("created_time")
                 .eq("deleted", 0)

@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service
 import java.time.Instant
 
 @Service
-@CacheConfig(cacheNames = ["post"])
 class PostService {
     @Autowired
     private lateinit var postRepository: PostRepository
@@ -24,7 +23,6 @@ class PostService {
     private lateinit var accountService: AccountService
 
     //插入主题帖
-    @CacheEvict(value = ["topicPostPage"], allEntries = true)
     fun insertTopicPost(
         authorId: String, content: String, title: String,
         theme: String
@@ -50,8 +48,8 @@ class PostService {
         authorId: String, content: String, master: String
     ) {
         //判断是否违规
-        if (content.length > 3000) {
-            throw Exception("字数超出3000字")
+        if (content.length > 2000) {
+            throw Exception("字数超出2000字")
         }
         val replyPost = ReplyPost()
         val timestamp = Instant.now()
@@ -96,4 +94,23 @@ class PostService {
         return json
     }
 
+    //获取回复帖
+    fun getReplyPostPage(current: Long, size: Long, postId: String): JSONObject {
+        fun Page<ReplyPost>.toJson(): JSONObject {
+            val res = this.toJsonWrapper()
+            val data = JSONArray()
+            records.forEach {
+                val json = JSONObject.toJSON(it) as JSONObject
+                json["userName"] = accountService.selectAccountById(it.authorId)?.userName
+                data.add(json)
+            }
+            res["value"] = data
+            return res
+        }
+        return try {
+            postRepository.getReplyPostPage(Page(current, size), postId).toJson()
+        } catch (e: Exception) {
+            throw e
+        }
+    }
 }

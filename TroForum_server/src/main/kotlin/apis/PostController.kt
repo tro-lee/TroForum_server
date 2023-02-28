@@ -1,4 +1,5 @@
 package com.troForum_server.apis
+
 import cn.dev33.satoken.annotation.SaCheckLogin
 import com.troForum_server.application.post.PostService
 import com.troForum_server.domain.service.PostRepository
@@ -66,5 +67,16 @@ class PostController {
     @PostMapping("/getTopicPost")
     fun getTopicPost(@RequestBody req: GetTopicPostReq) = result {
         return@result postService.getTopicPost(req.postId)
+    }
+
+    data class ReplyPostPageReq(
+        val current: Long,
+        val size: Long,
+        val postId: String
+    )
+
+    @PostMapping("/replyPostPage")
+    fun getReplyPost(@RequestBody req: ReplyPostPageReq) = result {
+        return@result postService.getReplyPostPage(req.current, req.size, req.postId)
     }
 }
