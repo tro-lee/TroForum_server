@@ -14,6 +14,7 @@ import org.springframework.cache.annotation.CacheEvict
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
 import java.time.Instant
+import java.time.format.DateTimeFormatter
 
 @Service
 class PostService {
@@ -73,6 +74,7 @@ class PostService {
             records.forEach {
                 val json = JSONObject.toJSON(it) as JSONObject
                 json["userName"] = accountService.selectAccountById(it.authorId)?.userName
+                json["createdTime"] = it.createdTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
                 json.remove("content")
                 data.add(json)
             }
@@ -91,6 +93,7 @@ class PostService {
         val data = postRepository.getTopicPost(postId) ?: throw Exception("返回主页")
         val json = JSONObject.toJSON(data) as JSONObject
         json["userName"] = accountService.selectAccountById(data.authorId)?.userName
+        json["createdTime"] =data.createdTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         return json
     }
 
@@ -102,6 +105,7 @@ class PostService {
             records.forEach {
                 val json = JSONObject.toJSON(it) as JSONObject
                 json["userName"] = accountService.selectAccountById(it.authorId)?.userName
+                json["createdTime"] = it.createdTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
                 data.add(json)
             }
             res["value"] = data
