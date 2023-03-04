@@ -37,13 +37,14 @@ class PostController {
     data class InsertReplyPostReq(
         val authorId: String,
         val content: String,
-        val master: String
+        val master: String,
+        val masterUserId: String
     )
 
     @PostMapping("/insReplyPost")
     fun insertReplyPost(@RequestBody req: InsertReplyPostReq) {
         postService.insertReplyPost(
-            req.authorId, req.content, req.master
+            req.authorId, req.content, req.master, req.masterUserId
         )
     }
 

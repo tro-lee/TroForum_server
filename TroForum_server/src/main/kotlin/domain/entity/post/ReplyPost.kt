@@ -15,6 +15,7 @@ class ReplyPost {
     var deleted: Boolean = false
     var likes: Int = 0
     var master: String = ""
+    var masterUserId: String = ""
 }
 
 @Mapper

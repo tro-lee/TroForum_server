@@ -9,9 +9,6 @@ import com.troForum_server.domain.entity.post.TopicPost
 import com.troForum_server.domain.service.PostRepository
 import com.troForum_server.infrastructure.common.toJsonWrapper
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.cache.annotation.CacheConfig
-import org.springframework.cache.annotation.CacheEvict
-import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
 import java.time.Instant
 import java.time.format.DateTimeFormatter
@@ -20,6 +17,7 @@ import java.time.format.DateTimeFormatter
 class PostService {
     @Autowired
     private lateinit var postRepository: PostRepository
+
     @Autowired
     private lateinit var accountService: AccountService
 
@@ -37,7 +35,7 @@ class PostService {
         }
         val topicPost = TopicPost()
         val timestamp = Instant.now()
-        topicPost.postId = authorId.substring(5, 10) + timestamp.toEpochMilli().toString()
+        topicPost.postId = timestamp.toEpochMilli().toString()
         topicPost.authorId = authorId
         topicPost.content = content
         topicPost.title = title
@@ -46,7 +44,7 @@ class PostService {
 
     //插入回复帖
     fun insertReplyPost(
-        authorId: String, content: String, master: String
+        authorId: String, content: String, master: String, masterUserId: String
     ) {
         //判断是否违规
         if (content.length > 2000) {
@@ -54,10 +52,11 @@ class PostService {
         }
         val replyPost = ReplyPost()
         val timestamp = Instant.now()
-        replyPost.postId = authorId.substring(5, 10) + timestamp.toEpochMilli().toString()
+        replyPost.postId = timestamp.toEpochMilli().toString()
         replyPost.authorId = authorId
         replyPost.content = content
         replyPost.master = master
+        replyPost.masterUserId = masterUserId
         try {
             postRepository.insertReplyPost(replyPost)
         } catch (e: Exception) {
@@ -93,7 +92,7 @@ class PostService {
         val data = postRepository.getTopicPost(postId) ?: throw Exception("返回主页")
         val json = JSONObject.toJSON(data) as JSONObject
         json["userName"] = accountService.selectAccountById(data.authorId)?.userName
-        json["createdTime"] =data.createdTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        json["createdTime"] = data.createdTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         return json
     }
 
@@ -102,10 +101,25 @@ class PostService {
         fun Page<ReplyPost>.toJson(): JSONObject {
             val res = this.toJsonWrapper()
             val data = JSONArray()
+            //回复页
             records.forEach {
+                //回复组
+                val replyData = JSONArray()
+                val replyDataList = postRepository.getReplyPostList(it.postId)
+                replyDataList.forEach { item ->
+                    run {
+                        val json = JSONObject.toJSON(item) as JSONObject
+                        json["ReplyName"] = accountService.selectAccountById(item.masterUserId)?.userName
+                        json["userName"] = accountService.selectAccountById(item.authorId)?.userName
+                        json["createdTime"] =
+                            item.createdTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+                        replyData.add(json)
+                    }
+                }
                 val json = JSONObject.toJSON(it) as JSONObject
                 json["userName"] = accountService.selectAccountById(it.authorId)?.userName
-                json["createdTime"] = it.createdTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+                json["createdTime"] = it.createdTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+                json["replyData"] = replyData
                 data.add(json)
             }
             res["value"] = data

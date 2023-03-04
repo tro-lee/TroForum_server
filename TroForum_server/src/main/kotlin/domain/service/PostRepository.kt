@@ -42,7 +42,16 @@ class PostRepository(
         )
     }
 
-    //获得回复贴
+    //获取回复组
+    fun getReplyPostList(keyword: String): MutableList<ReplyPost> {
+        return replyPostMapper.selectList(
+            QueryWrapper<ReplyPost>()
+                .eq("master", keyword)
+                .eq("deleted", 0)
+        )
+    }
+
+    //获得回复页
     fun getReplyPostPage(page: Page<ReplyPost>, keyword: String): Page<ReplyPost> {
         return replyPostMapper.selectPage(
             page,
