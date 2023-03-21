@@ -10,13 +10,17 @@ import org.springframework.stereotype.Repository
 class AccountRepository(val accountMapper: AccountMapper) {
     fun selectAccountByName(userName: String): Account? {
         return accountMapper.selectOne(
-            QueryWrapper<Account>().eq("user_name", userName)
+            QueryWrapper<Account>()
+                .eq("user_name", userName)
+                .eq("deleted", 0)
         )
     }
 
     fun selectAccountById(userId: String): Account? {
         return accountMapper.selectOne(
-            QueryWrapper<Account>().eq("user_id", userId)
+            QueryWrapper<Account>()
+                .eq("user_id", userId)
+                .eq("deleted", 0)
         )
     }
 
@@ -26,7 +30,18 @@ class AccountRepository(val accountMapper: AccountMapper) {
 
     fun checkingUserName(userName: String): Boolean {
         return accountMapper.exists(
-            QueryWrapper<Account>().eq("user_name", userName)
+            QueryWrapper<Account>()
+                .eq("user_name", userName)
+                .eq("deleted", 0)
+        )
+    }
+
+    fun updateBaseAccount(userId: String, account: Account): Int {
+        return accountMapper.update(
+            account,
+            QueryWrapper<Account>()
+                .eq("user_id", userId)
+                .eq("deleted", 0)
         )
     }
 }

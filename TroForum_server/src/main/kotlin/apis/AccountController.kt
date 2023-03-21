@@ -29,4 +29,22 @@ class AccountController {
     fun selectAccountById(@RequestBody userId: String) = result {
         return@result accountService.selectAccountById(userId)
     }
+
+    class UpdateUserNameReq {
+        val userName: String = ""
+    }
+
+    @PostMapping("/updateUserName")
+    fun updateUserName(@RequestBody req: UpdateUserNameReq) = result {
+        return@result accountService.updateUserName(req.userName)
+    }
+
+    class UpdatePasswordReq {
+        val password: String = ""
+    }
+
+    @PostMapping("/updatePassword")
+    fun updatePassword(@RequestBody req: UpdatePasswordReq) = result {
+        return@result accountService.updatePassword(req.password)
+    }
 }

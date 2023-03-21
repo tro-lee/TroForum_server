@@ -35,7 +35,6 @@ class PostRepository(
             page,
             QueryWrapper<TopicPost>()
                 .like("title", keyword)
-                .or()
                 .orderByDesc("likes")
                 .orderByDesc("created_time")
                 .eq("deleted", 0)

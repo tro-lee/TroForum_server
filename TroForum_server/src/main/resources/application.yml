@@ -16,7 +16,6 @@ spring:
     host: ruibest.club
     port: 6379
     password: ruibest
-
 # sa-token框架
 sa-token:
   token-name: satoken
