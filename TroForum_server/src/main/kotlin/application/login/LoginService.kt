@@ -1,8 +1,7 @@
-package com.troForum_server.application.common
+package com.troForum_server.application.login
 
 import cn.dev33.satoken.secure.BCrypt
 import cn.dev33.satoken.stp.StpUtil
-import cn.dev33.satoken.util.SaResult
 import com.troForum_server.domain.entity.account.Account
 import com.troForum_server.domain.service.AccountRepository
 import org.springframework.beans.factory.annotation.Autowired

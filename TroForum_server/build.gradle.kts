@@ -26,6 +26,8 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
 	//缓存
 	implementation("org.springframework.boot:spring-boot-starter-cache")
+	//websocket
+	implementation("org.springframework.boot:spring-boot-starter-websocket")
 	//基础环境
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")

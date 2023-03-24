@@ -12,10 +12,12 @@ class AccountService {
     @Autowired
     private lateinit var accountRepository: AccountRepository
 
+    //获取当前用户账号
     fun selectAccount(): Account? {
         return accountRepository.selectAccountById((StpUtil.getLoginId().toString()))
     }
 
+    //用id查账号
     fun selectAccountById(userId: String): Account? {
         return accountRepository.selectAccountById(userId)
     }

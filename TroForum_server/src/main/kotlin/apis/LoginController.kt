@@ -1,7 +1,7 @@
 package com.troForum_server.apis
 
 import cn.dev33.satoken.annotation.SaCheckLogin
-import com.troForum_server.application.common.LoginService
+import com.troForum_server.application.login.LoginService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 

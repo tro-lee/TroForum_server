@@ -2,8 +2,8 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <bytecodeTargetLevel>
-      <module name="TroForum_server.TroForum_server.main~1" target="1.8" />
-      <module name="TroForum_server.TroForum_server.test~1" target="1.8" />
+      <module name="TroForum_server.TroForum_server.main" target="1.8" />
+      <module name="TroForum_server.TroForum_server.test" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

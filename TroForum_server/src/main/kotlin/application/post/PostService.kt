@@ -74,7 +74,7 @@ class PostService {
             records.forEach {
                 val json = JSONObject.toJSON(it) as JSONObject
                 json["userName"] = accountService.selectAccountById(it.authorId)?.userName
-                json["createdTime"] = it.createdTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+                json["createdTime"] = it.createdTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
                 json.remove("content")
                 data.add(json)
             }
