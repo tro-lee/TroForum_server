@@ -3,7 +3,6 @@ package com.troForum_server.application.websocket
 import org.springframework.stereotype.Service
 import com.troForum_server.infrastructure.utils.SessionManager
 import org.springframework.web.socket.TextMessage
-import org.springframework.web.socket.WebSocketMessage
 
 @Service
 class WebSocketService {

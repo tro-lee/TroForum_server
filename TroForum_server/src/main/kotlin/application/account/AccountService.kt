@@ -3,7 +3,7 @@ package com.troForum_server.application.account
 import cn.dev33.satoken.secure.BCrypt
 import cn.dev33.satoken.stp.StpUtil
 import com.troForum_server.domain.entity.account.Account
-import com.troForum_server.domain.service.AccountRepository
+import com.troForum_server.domain.dao.AccountRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
@@ -22,6 +22,7 @@ class AccountService {
         return accountRepository.selectAccountById(userId)
     }
 
+    //更新用户名
     fun updateUserName(userName: String): Int {
         val account = selectAccountById(StpUtil.getLoginId().toString())?: throw Exception("账号不存在")
         if ( accountRepository.checkingUserName(userName) ) {
@@ -31,6 +32,7 @@ class AccountService {
         return accountRepository.updateBaseAccount(StpUtil.getLoginId().toString(), account)
     }
 
+    //更新密码
     fun updatePassword(password: String): Int {
         val account = selectAccountById(StpUtil.getLoginId().toString())?: throw Exception("账号不存在")
         account.password = BCrypt.hashpw(password, BCrypt.gensalt())

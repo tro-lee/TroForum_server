@@ -1,4 +1,4 @@
-package com.troForum_server.domain.service
+package com.troForum_server.domain.dao
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper
 import com.troForum_server.domain.entity.account.Account

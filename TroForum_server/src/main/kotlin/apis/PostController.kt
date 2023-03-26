@@ -2,7 +2,7 @@ package com.troForum_server.apis
 
 import cn.dev33.satoken.annotation.SaCheckLogin
 import com.troForum_server.application.post.PostService
-import com.troForum_server.domain.service.PostRepository
+import com.troForum_server.domain.dao.PostRepository
 import com.troForum_server.infrastructure.common.result
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.PostMapping

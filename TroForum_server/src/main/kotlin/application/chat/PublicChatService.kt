@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page
 import com.troForum_server.application.account.AccountService
 import com.troForum_server.application.websocket.WebSocketService
 import com.troForum_server.domain.entity.chat.PublicChat
-import com.troForum_server.domain.service.ChatRepository
+import com.troForum_server.domain.dao.ChatRepository
 import com.troForum_server.infrastructure.common.toJsonWrapper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service

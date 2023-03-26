@@ -3,7 +3,7 @@ package com.troForum_server.application.login
 import cn.dev33.satoken.secure.BCrypt
 import cn.dev33.satoken.stp.StpUtil
 import com.troForum_server.domain.entity.account.Account
-import com.troForum_server.domain.service.AccountRepository
+import com.troForum_server.domain.dao.AccountRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.time.Instant
@@ -15,7 +15,7 @@ class LoginService {
 
     fun register(userName: String, password: String) {
         val timestamp = Instant.now()
-        var account = Account()
+        val account = Account()
         account.userId = timestamp.toEpochMilli().toString() + (100..999).random().toString()
         account.userName = userName
         if ( accountRepository.checkingUserName(userName) ) {
