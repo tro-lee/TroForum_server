@@ -27,9 +27,12 @@ class AccountController {
     }
 
     //查询用户信息
+    class SelectAccountByIdReq {
+        val userId: String = ""
+    }
     @PostMapping("/selectAccountById")
-    fun selectAccountById(@RequestBody userId: String) = result {
-        return@result accountService.selectAccountById(userId)
+    fun selectAccountById(@RequestBody req: SelectAccountByIdReq) = result {
+        return@result accountService.selectAccountById(req.userId)
     }
 
     //更新用户名

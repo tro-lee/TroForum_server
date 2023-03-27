@@ -41,6 +41,18 @@ class PostRepository(
         )
     }
 
+    //获取作者的主题贴
+    fun getTopicPostPageByAuthor(page: Page<TopicPost>, authorId: String): Page<TopicPost> {
+        return topicPostMapper.selectPage(
+            page,
+            QueryWrapper<TopicPost>()
+                .eq("author_id", authorId)
+                .orderByDesc("likes")
+                .orderByDesc("created_time")
+                .eq("deleted", 0)
+        )
+    }
+
     //获取回复组
     fun getReplyPostList(keyword: String): MutableList<ReplyPost> {
         return replyPostMapper.selectList(

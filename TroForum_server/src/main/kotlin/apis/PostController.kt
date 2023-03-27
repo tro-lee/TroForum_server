@@ -61,6 +61,19 @@ class PostController {
         )
     }
 
+    data class GetTopicPostPageByAuthorReq(
+        val current: Long,
+        val size: Long,
+        val authorId: String
+    )
+
+    @PostMapping("/topicPostPageByAuthor")
+    fun getTopicPostPageByAuthor(@RequestBody req: GetTopicPostPageByAuthorReq) = result {
+        return@result postService.getTopicPostPageByAuthor(
+            req.current, req.size, req.authorId
+        )
+    }
+
     class GetTopicPostReq {
         val postId: String = ""
     }

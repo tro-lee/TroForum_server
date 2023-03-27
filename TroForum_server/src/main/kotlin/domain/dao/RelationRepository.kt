@@ -11,13 +11,19 @@ class RelationRepository(
 ) {
     //查询是否存在该用户关系
     fun checkingUserRelation(relationId: String): Boolean {
-        val userRelation = userRelationMapper.selectById(relationId)
+        val userRelation = userRelationMapper.selectOne(
+            QueryWrapper<UserRelation>()
+                .eq("relation_id", relationId)
+        )
         return userRelation != null
     }
 
     //获取用户关系
     fun getUserRelation(relationId: String): UserRelation {
-        return userRelationMapper.selectById(relationId)
+        return userRelationMapper.selectOne(
+            QueryWrapper<UserRelation>()
+                .eq("relation_id", relationId)
+        )
     }
 
     //获取关系列表
@@ -42,7 +48,11 @@ class RelationRepository(
     //更新用户关系
     fun updateUserRelation(userRelation: UserRelation) {
         try {
-            userRelationMapper.updateById(userRelation)
+            userRelationMapper.update(
+                userRelation,
+                QueryWrapper<UserRelation>()
+                    .eq("relation_id", userRelation.relationId)
+            )
         } catch (e: Exception) {
             throw e
         }

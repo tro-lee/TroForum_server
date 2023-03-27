@@ -23,6 +23,12 @@ class RelationController {
         val friendId: String = ""
     }
 
+    //检查关系
+    @PostMapping("/checkRelation")
+    fun checkRelation(@RequestBody req: FriendIdReq) = result {
+        return@result relationService.checkRelation(accountService.selectAccount()!!.userId, req.friendId)
+    }
+
     //加好友
     @PostMapping("/addFriend")
     fun addFriend(@RequestBody req: FriendIdReq) = result {
@@ -32,19 +38,13 @@ class RelationController {
     //同意好友
     @PostMapping("/agreeFriend")
     fun agreeFriend(@RequestBody req: FriendIdReq) = result {
-        return@result relationService.agreeFriend(accountService.selectAccount()!!.userId.substring(8) + req.friendId.substring(8))
-    }
-
-    //拉黑
-    @PostMapping("/BlackList")
-    fun addBlackList(@RequestBody req: FriendIdReq) = result {
-        return@result relationService.addBlackList(accountService.selectAccount()!!.userId.substring(8) + req.friendId.substring(8))
+        return@result relationService.agreeFriend(accountService.selectAccount()!!.userId, req.friendId)
     }
 
     //删除好友
     @PostMapping("/deleteFriend")
     fun deleteFriend(@RequestBody req: FriendIdReq) = result {
-        return@result relationService.deleteFriend(accountService.selectAccount()!!.userId.substring(8) + req.friendId.substring(8))
+        return@result relationService.deleteFriend(accountService.selectAccount()!!.userId, req.friendId)
     }
 
     //获取好友列表

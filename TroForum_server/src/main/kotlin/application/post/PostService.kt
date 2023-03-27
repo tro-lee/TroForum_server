@@ -66,23 +66,33 @@ class PostService {
 
     }
 
+    fun Page<TopicPost>.toJson(): JSONObject {
+        val res = this.toJsonWrapper()
+        val data = JSONArray()
+        records.forEach {
+            val json = JSONObject.toJSON(it) as JSONObject
+            json["userName"] = accountService.selectAccountById(it.authorId)?.userName
+            json["createdTime"] = it.createdTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+            json.remove("content")
+            data.add(json)
+        }
+        res["value"] = data
+        return res
+    }
+
     //获得主题页
     fun getTopicPostPage(current: Long, size: Long, keyword: String): JSONObject {
-        fun Page<TopicPost>.toJson(): JSONObject {
-            val res = this.toJsonWrapper()
-            val data = JSONArray()
-            records.forEach {
-                val json = JSONObject.toJSON(it) as JSONObject
-                json["userName"] = accountService.selectAccountById(it.authorId)?.userName
-                json["createdTime"] = it.createdTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
-                json.remove("content")
-                data.add(json)
-            }
-            res["value"] = data
-            return res
-        }
         return try {
             postRepository.getTopicPostPage(Page(current, size), keyword).toJson()
+        } catch (e: Exception) {
+            throw e
+        }
+    }
+
+    //获取作者的主题帖
+    fun getTopicPostPageByAuthor(current: Long, size: Long, authorId: String): JSONObject {
+        return try {
+            postRepository.getTopicPostPageByAuthor(Page(current, size), authorId).toJson()
         } catch (e: Exception) {
             throw e
         }
