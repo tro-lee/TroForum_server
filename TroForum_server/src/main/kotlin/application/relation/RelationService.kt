@@ -2,6 +2,7 @@ package com.troForum_server.application.relation
 
 import com.alibaba.fastjson.JSONArray
 import com.alibaba.fastjson.JSONObject
+import com.troForum_server.application.account.AccountService
 import com.troForum_server.domain.dao.RelationRepository
 import com.troForum_server.domain.entity.realtion.UserRelation
 import org.springframework.beans.factory.annotation.Autowired
@@ -19,6 +20,9 @@ class RelationService {
     //type 0:没建立关系 1:已经关注了
     @Autowired
     private lateinit var relationRepository: RelationRepository
+
+    @Autowired
+    private lateinit var accountService: AccountService
 
     //加工关系id
     fun processRelationId(userId: String, followerId: String): String {
@@ -79,25 +83,30 @@ class RelationService {
     }
 
     //获取关注列表
-    fun getFollowerList(userId: String): JSONArray {
-        val jsonArray = JSONArray()
+    fun getFollowerList(userId: String): JSONObject {
         val userRelationList = relationRepository.getFollowerList(userId)
+        val json = JSONObject()
+        val jsonArray = JSONArray()
         for (userRelation in userRelationList) {
-            //添加到jsonArray
-            val jsonObject = JSONObject.toJSON(userRelation) as JSONObject
-            jsonArray.add(jsonObject)
+            val account = accountService.selectAccountById(userRelation.followerId)
+            jsonArray.add(account)
         }
-        return jsonArray
+        json["value"] = jsonArray
+        json["length"] = jsonArray.size
+        return json
     }
 
     //获取被关注列表
-    fun getFollowed(userId: String): JSONArray {
-        val jsonArray = JSONArray()
+    fun getFollowed(userId: String): JSONObject {
         val userRelationList = relationRepository.getFollowedList(userId)
+        val json = JSONObject()
+        val jsonArray = JSONArray()
         for (userRelation in userRelationList) {
-            val jsonObject = JSONObject.toJSON(userRelation) as JSONObject
-            jsonArray.add(jsonObject)
+            val account = accountService.selectAccountById(userRelation.starterId)
+            jsonArray.add(account)
         }
-        return jsonArray
+        json["value"] = jsonArray
+        json["length"] = jsonArray.size
+        return json
     }
 }

@@ -16,14 +16,6 @@ spring:
     host: ruibest.club
     port: 6379
     password: ruibest
-  # 连接mongodb
-  data:
-    mongodb:
-      host: ruibest.club
-      port: 27017
-      database: TroForum
-      username: root
-      password: 1482501212@qq
 # sa-token框架
 sa-token:
   token-name: satoken

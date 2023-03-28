@@ -1,6 +1,7 @@
 package com.troForum_server.domain.dao
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page
 import com.troForum_server.domain.entity.account.Account
 import com.troForum_server.domain.entity.account.AccountMapper
 import org.springframework.stereotype.Repository
@@ -41,6 +42,26 @@ class AccountRepository(val accountMapper: AccountMapper) {
             account,
             QueryWrapper<Account>()
                 .eq("user_id", userId)
+                .eq("deleted", 0)
+        )
+    }
+
+    //获取用户页
+    fun getAccountPage(page: Page<Account>, keyword: String): Page<Account> {
+        return accountMapper.selectPage(
+            page,
+            QueryWrapper<Account>()
+                .like("user_name", keyword)
+                .orderByDesc("created_time")
+                .eq("deleted", 0)
+        )
+    }
+
+    //用于搜索用户
+    fun getSearchAccount(keyword: String): MutableList<Account> {
+        return accountMapper.selectList(
+            QueryWrapper<Account>()
+                .like("user_name", keyword)
                 .eq("deleted", 0)
         )
     }
