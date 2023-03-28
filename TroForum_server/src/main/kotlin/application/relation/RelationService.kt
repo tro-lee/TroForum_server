@@ -11,61 +11,53 @@ import org.springframework.stereotype.Service
 class RelationService {
     /*
     *   分为两大部分
-    *   1.处理好友关系，分为申请好友、同意好友、删除好友
-    *   2.获取好友列表、获取好友请求列表
+    *   1.可以关注别人，和取消关注别人
+    *   2.可以查看自己关注的人和关注自己的人
+    *   3.只有更新表和查询表才能知道是否之前关注过，其他只有存在记录和没有记录关系
     */
 
-    //type -1:没建立关系 0:申请好友 1:好友 3:删除好友 4:被申请好友
+    //type 0:没建立关系 1:已经关注了
     @Autowired
     private lateinit var relationRepository: RelationRepository
 
     //加工关系id
-    fun processRelationId(userId: String, friendId: String): String {
-        return listOf(userId.substring(8), friendId.substring(8)).sorted().joinToString("1")
+    fun processRelationId(userId: String, followerId: String): String {
+        return userId.substring(8) + followerId.substring(8)
     }
 
-    //查询关系 如果没建立关系或者已经删除返回-1
-    fun checkRelation(userId: String, friendId: String): Int {
-        val relationId = processRelationId(userId, friendId)
+    //查询关系
+    fun checkRelation(userId: String, followerId: String): Int {
+        val relationId = processRelationId(userId, followerId)
         //判断是否已经是好友
         if (relationRepository.checkingUserRelation(relationId)) {
-            val relation = relationRepository.getUserRelation(relationId)
-            //判断是否被申请好友与申请好友
-            if (relation.type == 0) {
-                return if (relation.starterId == userId) 0
-                else 4
-            }
+            return relationRepository.getUserRelation(relationId).type
+        }
+        return 0
+    }
+
+    //添加关注 如果以前有联系记录则恢复申请
+    fun addFriend(userId: String, followerId: String): Boolean {
+        val relationId = processRelationId(userId, followerId)
+        //判断是否已经是好友
+        if (relationRepository.checkingUserRelation(relationId)) {
             //判断是否已经删除
-            if (relation.type == 3) return -1
-            return relation.type
-        }
-        return -1
-    }
-
-    //添加好友 如果以前有联系记录则恢复申请
-    fun addFriend(userId: String, friendId: String): Boolean {
-        val relationId = processRelationId(userId, friendId)
-        //判断是否已经是好友
-        if (relationRepository.checkingUserRelation(relationId)) {
-            //判断是否在黑名单或删除中
             val relation = relationRepository.getUserRelation(relationId)
-            if (relation.type == 2 || relation.type == 3) {
-                relation.type = 0
-                try {
-                    relationRepository.updateUserRelation(relation)
-                } catch (e: Exception) {
-                    return false
-                }
-                return true
-            } else throw Exception("已经是好友")
+            //无论是否删除，都直接恢复为添加关注
+            relation.type = 1
+            try {
+                relationRepository.updateUserRelation(relation)
+            } catch (e: Exception) {
+                return false
+            }
+            return true
         }
-
+        //没有联系，则建立
         val userRelation = UserRelation()
         //取userId和friendId后八位作为relationId
         userRelation.relationId = relationId
         userRelation.starterId = userId
-        userRelation.receiverId = friendId
-        userRelation.type = 0
+        userRelation.followerId = followerId
+        userRelation.type = 1
         try {
             relationRepository.insertUserRelation(userRelation)
         } catch (e: Exception) {
@@ -74,22 +66,10 @@ class RelationService {
         return true
     }
 
-    //同意好友
-    fun agreeFriend(userId: String, friendId: String): Boolean {
-        val relation = relationRepository.getUserRelation(processRelationId(userId, friendId))
-        relation.type = 1
-        try {
-            relationRepository.updateUserRelation(relation)
-        } catch (e: Exception) {
-            return false
-        }
-        return true
-    }
-
     //删除好友
-    fun deleteFriend(userId: String, friendId: String): Boolean {
-        val relation = relationRepository.getUserRelation(processRelationId(userId, friendId))
-        relation.type = 3
+    fun deleteFollower(userId: String, followerId: String): Boolean {
+        val relation = relationRepository.getUserRelation(processRelationId(userId, followerId))
+        relation.type = 0
         try {
             relationRepository.updateUserRelation(relation)
         } catch (e: Exception) {
@@ -98,28 +78,23 @@ class RelationService {
         return true
     }
 
-    //获取好友列表
-    fun getFriendList(userId: String): JSONArray {
+    //获取关注列表
+    fun getFollowerList(userId: String): JSONArray {
         val jsonArray = JSONArray()
-        val userRelationList = relationRepository.getUserRelationList(userId)
+        val userRelationList = relationRepository.getFollowerList(userId)
         for (userRelation in userRelationList) {
-            //判断是否没加好友，或者是删除好友
-            if (userRelation.type == 0 || userRelation.type == 3) continue
-
+            //添加到jsonArray
             val jsonObject = JSONObject.toJSON(userRelation) as JSONObject
             jsonArray.add(jsonObject)
         }
         return jsonArray
     }
 
-    //获取好友请求列表
-    fun getFriendRequestList(userId: String): JSONArray {
+    //获取被关注列表
+    fun getFollowed(userId: String): JSONArray {
         val jsonArray = JSONArray()
-        val userRelationList = relationRepository.getUserRelationList(userId)
+        val userRelationList = relationRepository.getFollowedList(userId)
         for (userRelation in userRelationList) {
-            //判断是否是申请好友
-            if (userRelation.type != 0) continue
-
             val jsonObject = JSONObject.toJSON(userRelation) as JSONObject
             jsonArray.add(jsonObject)
         }

@@ -12,50 +12,43 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @SaCheckLogin
 class RelationController {
-    //只使用friendId完成业务
-    //好友关系表中的relationId为starterId和receiverId后八位拼接
+    //只使用followerId完成业务
 
     @Autowired
     private lateinit var accountService: AccountService
     @Autowired
     private lateinit var relationService: RelationService
-    class FriendIdReq {
-        val friendId: String = ""
+    class FollowerIdReq {
+        val followerId: String = ""
     }
 
     //检查关系
     @PostMapping("/checkRelation")
-    fun checkRelation(@RequestBody req: FriendIdReq) = result {
-        return@result relationService.checkRelation(accountService.selectAccount()!!.userId, req.friendId)
+    fun checkRelation(@RequestBody req: FollowerIdReq) = result {
+        return@result relationService.checkRelation(accountService.selectAccount()!!.userId, req.followerId)
     }
 
-    //加好友
-    @PostMapping("/addFriend")
-    fun addFriend(@RequestBody req: FriendIdReq) = result {
-        return@result relationService.addFriend(accountService.selectAccount()!!.userId, req.friendId)
+    //关注
+    @PostMapping("/follow")
+    fun follow(@RequestBody req: FollowerIdReq) = result {
+        return@result relationService.addFriend(accountService.selectAccount()!!.userId, req.followerId)
     }
 
-    //同意好友
-    @PostMapping("/agreeFriend")
-    fun agreeFriend(@RequestBody req: FriendIdReq) = result {
-        return@result relationService.agreeFriend(accountService.selectAccount()!!.userId, req.friendId)
+    //取消关注
+    @PostMapping("/deleteFollower")
+    fun deleteFollower(@RequestBody req: FollowerIdReq) = result {
+        return@result relationService.deleteFollower(accountService.selectAccount()!!.userId, req.followerId)
     }
 
-    //删除好友
-    @PostMapping("/deleteFriend")
-    fun deleteFriend(@RequestBody req: FriendIdReq) = result {
-        return@result relationService.deleteFriend(accountService.selectAccount()!!.userId, req.friendId)
+    //获取关注列表
+    @PostMapping("/getFollowerList")
+    fun getFollowerList() = result {
+        return@result relationService.getFollowerList(accountService.selectAccount()!!.userId)
     }
 
-    //获取好友列表
-    @PostMapping("/getFriendList")
-    fun getFriendList() = result {
-        return@result relationService.getFriendList(accountService.selectAccount()!!.userId)
-    }
-
-    //获取好友请求列表
-    @PostMapping("/getFriendRequestList")
-    fun getFriendRequestList() = result {
-        return@result relationService.getFriendRequestList(accountService.selectAccount()!!.userId)
+    //获取被关注列表
+    @PostMapping("/getFollowed")
+    fun getFollowed() = result {
+        return@result relationService.getFollowed(accountService.selectAccount()!!.userId)
     }
 }

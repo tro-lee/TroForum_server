@@ -26,13 +26,21 @@ class RelationRepository(
         )
     }
 
-    //获取关系列表
-    fun getUserRelationList(userId: String): MutableList<UserRelation> {
+    //获取关注他人列表
+    fun getFollowerList(userId: String): MutableList<UserRelation> {
         return userRelationMapper.selectList(
             QueryWrapper<UserRelation>()
+                .eq("type", 1)
                 .eq("starter_id", userId)
-                .or()
-                .eq("receiver_id", userId)
+        )
+    }
+
+    //获取被他人关注列表
+    fun getFollowedList(userId: String): MutableList<UserRelation> {
+        return userRelationMapper.selectList(
+            QueryWrapper<UserRelation>()
+                .eq("type", 1)
+                .eq("follower_id", userId)
         )
     }
 

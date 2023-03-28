@@ -9,7 +9,7 @@ import java.time.LocalDateTime
 class UserRelation {
     var relationId: String = ""
     var starterId: String = ""
-    var receiverId: String = ""
+    var followerId: String = ""
     var type: Int = 1
     var createdTime: LocalDateTime = LocalDateTime.now()
 }
