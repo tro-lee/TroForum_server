@@ -24,6 +24,13 @@ class ChatController {
     }
     @PostMapping("/insertPublicChat")
     fun insertPublicChat(@RequestBody req: PublicChatReq) = result {
+        //检查content
+        if (req.content.length > 100) {
+            throw Exception("内容太多，超过字体限制")
+        }
+        if (req.content.isEmpty()) {
+            throw Exception("没有内容")
+        }
         return@result publicChatService.insertPublicChat(req.content)
     }
 

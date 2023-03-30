@@ -62,6 +62,9 @@ class AccountController {
     }
     @PostMapping("/updateUserName")
     fun updateUserName(@RequestBody req: UpdateUserNameReq) = result {
+        if ( req.userName.length > 16 ) {
+            throw Exception("用户名过长")
+        }
         return@result accountService.updateUserName(req.userName)
     }
 

@@ -29,6 +29,13 @@ class PostController {
 
     @PostMapping("/insTopicPost")
     fun insertTopicPost(@RequestBody req: InsertTopicPostReq) {
+        //判断是否违规
+        if (req.content.length > 3000) {
+            throw Exception("字数超出3000字")
+        }
+        if (req.title.length > 32) {
+            throw Exception("标题过长")
+        }
         postService.insertTopicPost(
             req.authorId, req.content, req.title, req.theme
         )
@@ -43,6 +50,10 @@ class PostController {
 
     @PostMapping("/insReplyPost")
     fun insertReplyPost(@RequestBody req: InsertReplyPostReq) {
+        //判断是否违规
+        if (req.content.length > 2000) {
+            throw Exception("字数超出2000字")
+        }
         postService.insertReplyPost(
             req.authorId, req.content, req.master, req.masterUserId
         )

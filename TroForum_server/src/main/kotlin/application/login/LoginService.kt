@@ -21,9 +21,6 @@ class LoginService {
         if ( accountRepository.checkingUserName(userName) ) {
             throw Exception("用户名重复")
         }
-        if ( password.isEmpty() ) {
-            throw Exception("密码不能为空")
-        }
         account.password = BCrypt.hashpw(password, BCrypt.gensalt())
         account.role = "user"
         account.deleted = 0

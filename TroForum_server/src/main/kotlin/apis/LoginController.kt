@@ -18,6 +18,12 @@ class LoginController {
 
     @PostMapping("/register")
     fun signIn(@RequestBody req: LoginReq) {
+        if ( req.password.isEmpty() ) {
+            throw Exception("密码不能为空")
+        }
+        if ( req.userName.length > 16 ) {
+            throw Exception("用户名过长")
+        }
         loginService.register(req.userName, req.password)
     }
 

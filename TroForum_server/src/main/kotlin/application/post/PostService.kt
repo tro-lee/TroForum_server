@@ -27,13 +27,6 @@ class PostService {
         authorId: String, content: String, title: String,
         theme: String
     ) {
-        //判断是否违规
-        if (content.length > 3000) {
-            throw Exception("字数超出3000字")
-        }
-        if (title.length > 32) {
-            throw Exception("标题过长")
-        }
         val topicPost = TopicPost()
         val timestamp = Instant.now()
         topicPost.postId = timestamp.toEpochMilli().toString()
@@ -47,10 +40,6 @@ class PostService {
     fun insertReplyPost(
         authorId: String, content: String, master: String, masterUserId: String
     ) {
-        //判断是否违规
-        if (content.length > 2000) {
-            throw Exception("字数超出2000字")
-        }
         val replyPost = ReplyPost()
         val timestamp = Instant.now()
         replyPost.postId = timestamp.toEpochMilli().toString()

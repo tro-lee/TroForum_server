@@ -36,13 +36,6 @@ class PublicChatService {
 
     //插入公共聊天
     fun insertPublicChat(content: String) {
-        //检查content
-        if (content.length > 100) {
-            throw Exception("内容太多，超过字体限制")
-        }
-        if (content.isEmpty()) {
-            throw Exception("没有内容")
-        }
         //生成publicChat对象
         val publicChat = PublicChat()
         publicChat.chatId = Instant.now().toEpochMilli().toString()
