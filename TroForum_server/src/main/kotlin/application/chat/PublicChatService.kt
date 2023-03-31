@@ -49,7 +49,7 @@ class PublicChatService {
         }
 
         //当前消息发送给大家
-        webSocketService.sendMessageToAll(publicChatToJson(publicChat).toJSONString())
+        webSocketService.sendTestMessage(publicChatToJson(publicChat).toJSONString())
     }
 
     //获取公共聊天页
