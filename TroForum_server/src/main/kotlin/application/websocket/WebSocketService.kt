@@ -12,8 +12,13 @@ class WebSocketService {
     @Autowired
     private lateinit var messageTemplate: SimpMessagingTemplate
 
-    //发送给/topic/test的消息
+    //主页聊天框
     fun sendTestMessage(message: String) {
-        messageTemplate.convertAndSend("/topic/test", message)
+        messageTemplate.convertAndSend("/topic/publicChat", message)
+    }
+
+    //好友聊天
+    fun sendFriendMessage(message: String, relationId: String) {
+        messageTemplate.convertAndSend("/queue/privateChat/${relationId}", message)
     }
 }

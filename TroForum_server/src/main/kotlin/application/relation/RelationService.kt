@@ -89,7 +89,11 @@ class RelationService {
         val jsonArray = JSONArray()
         for (userRelation in userRelationList) {
             val account = accountService.selectAccountById(userRelation.followerId)
-            jsonArray.add(account)
+            val jsonObject = JSONObject()
+            jsonObject["userId"] = account!!.userId
+            jsonObject["userName"] = account.userName
+            jsonObject["relationId"] = userRelation.relationId
+            jsonArray.add(jsonObject)
         }
         json["value"] = jsonArray
         json["length"] = jsonArray.size
@@ -103,7 +107,11 @@ class RelationService {
         val jsonArray = JSONArray()
         for (userRelation in userRelationList) {
             val account = accountService.selectAccountById(userRelation.starterId)
-            jsonArray.add(account)
+            val jsonObject = JSONObject()
+            jsonObject["userId"] = account!!.userId
+            jsonObject["userName"] = account.userName
+            jsonObject["relationId"] = userRelation.relationId
+            jsonArray.add(jsonObject)
         }
         json["value"] = jsonArray
         json["length"] = jsonArray.size
