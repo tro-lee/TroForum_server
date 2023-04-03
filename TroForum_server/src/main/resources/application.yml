@@ -11,6 +11,10 @@ spring:
     username: root
     password: 1482501212@qq
     driver-class-name: com.mysql.jdbc.Driver
+  servlet:
+    multipart:
+      max-request-size: 5MB
+      max-file-size: 5MB
 
 # sa-token框架
 sa-token:

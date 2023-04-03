@@ -14,8 +14,6 @@ ADD  ./build/libs/TroForum_server-0.0.1-SNAPSHOT.jar /TroForum_server.jar
 RUN mkdir /upload
 RUN mkdir /upload/avatar
 
-VOLUME ["/upload"]
-
 #映射端口号
 EXPOSE 8080
 

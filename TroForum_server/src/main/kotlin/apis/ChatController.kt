@@ -71,7 +71,7 @@ class ChatController {
         } else {
             req.relationId
         }
-        return@result privateChatService.insertPrivateChat(req.content, req.relationId)
+        return@result privateChatService.insertPrivateChat(req.content, relationId)
     }
 
     //获取私人聊天页

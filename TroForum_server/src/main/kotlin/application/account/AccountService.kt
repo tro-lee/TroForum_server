@@ -105,9 +105,9 @@ class AccountService {
         if (!avatar.isEmpty) {
             try {
                 val account = accountRepository.selectAccountById(StpUtil.getLoginId().toString()) ?: throw Exception("账号不存在")
-                account.avatarUrl = "/upload/avatar/${StpUtil.getLoginId()}.jpg"
+                account.avatarUrl = "/avatar/${StpUtil.getLoginId()}.jpg"
                 accountRepository.updateBaseAccount(StpUtil.getLoginId().toString(), account)
-                avatar.transferTo(File("/app/upload/avatar/${StpUtil.getLoginId()}.jpg"))
+                avatar.transferTo(File("/upload/avatar/${StpUtil.getLoginId()}.jpg"))
             } catch (e: Exception) {
                 e.printStackTrace()
                 return false
