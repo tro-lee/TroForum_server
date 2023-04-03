@@ -46,6 +46,8 @@ class PostService {
         records.forEach {
             val json = JSONObject.toJSON(it) as JSONObject
             json["userName"] = accountService.idToAccount(it.authorId)!!.userName
+            json["userId"] = it.authorId
+            json["avatarUrl"] = accountService.idToAccount(it.authorId)!!.avatarUrl
             json["createdTime"] = it.createdTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
             json.remove("content")
             data.add(json)
@@ -77,7 +79,9 @@ class PostService {
         val data = postRepository.getTopicPost(postId) ?: throw Exception("返回主页")
         val json = JSONObject.toJSON(data) as JSONObject
         json["userName"] = accountService.idToAccount(data.authorId)!!.userName
-        json["createdTime"] = data.createdTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        json["createdTime"] = data.createdTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+        json["userId"] = data.authorId
+        json["avatarUrl"] = accountService.idToAccount(data.authorId)!!.avatarUrl
         return json
     }
 
@@ -117,13 +121,16 @@ class PostService {
                         val json = JSONObject.toJSON(item) as JSONObject
                         json["ReplyName"] = accountService.idToAccount(it.authorId)!!.userName
                         json["userName"] = accountService.idToAccount(it.authorId)!!.userName
-                        json["createdTime"] =
-                            item.createdTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+                        json["userId"] = it.authorId
+                        json["avatarUrl"] = accountService.idToAccount(it.authorId)!!.avatarUrl
+                        json["createdTime"] = item.createdTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
                         replyData.add(json)
                     }
                 }
                 val json = JSONObject.toJSON(it) as JSONObject
                 json["userName"] = accountService.idToAccount(it.authorId)!!.userName
+                json["userId"] = it.authorId
+                json["avatarUrl"] = accountService.idToAccount(it.authorId)!!.avatarUrl
                 json["createdTime"] = it.createdTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
                 json["replyData"] = replyData
                 data.add(json)

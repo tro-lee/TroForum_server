@@ -85,9 +85,8 @@ class RelationService {
         return true
     }
 
-    //获取关注列表
-    fun getFollowerList(userId: String): JSONObject {
-        val userRelationList = relationRepository.getFollowerList(userId)
+    //列表转json
+    fun listToJson(userRelationList: List<UserRelation>): JSONObject {
         val json = JSONObject()
         val jsonArray = JSONArray()
         for (userRelation in userRelationList) {
@@ -95,6 +94,7 @@ class RelationService {
             val jsonObject = JSONObject()
             jsonObject["userId"] = account!!.userId
             jsonObject["userName"] = account.userName
+            jsonObject["avatarUrl"] = account.avatarUrl
             jsonObject["relationId"] = userRelation.relationId
             jsonArray.add(jsonObject)
         }
@@ -103,21 +103,15 @@ class RelationService {
         return json
     }
 
+    //获取关注列表
+    fun getFollowerList(userId: String): JSONObject {
+        val userRelationList = relationRepository.getFollowerList(userId)
+        return listToJson(userRelationList)
+    }
+
     //获取被关注列表
     fun getFollowed(userId: String): JSONObject {
         val userRelationList = relationRepository.getFollowedList(userId)
-        val json = JSONObject()
-        val jsonArray = JSONArray()
-        for (userRelation in userRelationList) {
-            val account = accountService.idToAccount(userRelation.starterId)
-            val jsonObject = JSONObject()
-            jsonObject["userId"] = account!!.userId
-            jsonObject["userName"] = account.userName
-            jsonObject["relationId"] = userRelation.relationId
-            jsonArray.add(jsonObject)
-        }
-        json["value"] = jsonArray
-        json["length"] = jsonArray.size
-        return json
+        return listToJson(userRelationList)
     }
 }
