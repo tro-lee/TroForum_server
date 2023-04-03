@@ -8,6 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.time.Instant
 
+/*
+* 登录服务层，在这里使用accountRepository完成账号的创建与通行
+ */
 @Service
 class LoginService {
     @Autowired
@@ -22,8 +25,6 @@ class LoginService {
             throw Exception("用户名重复")
         }
         account.password = BCrypt.hashpw(password, BCrypt.gensalt())
-        account.role = "user"
-        account.deleted = 0
         try {
             accountRepository.insertAccount(account)
         } catch (e: Exception) {

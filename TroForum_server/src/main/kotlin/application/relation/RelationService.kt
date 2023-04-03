@@ -8,6 +8,9 @@ import com.troForum_server.domain.entity.realtion.UserRelation
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
+/*
+* 关系服务层，通过拼接id来建立关系，0未建立关系，可以是取关，1是建立关系
+ */
 @Service
 class RelationService {
     /*
@@ -26,7 +29,7 @@ class RelationService {
 
     //加工关系id
     fun processRelationId(userId: String, followerId: String): String {
-        return userId.substring(8) + followerId.substring(8)
+        return userId.substring(8) + '-' + followerId.substring(8)
     }
 
     //查询关系
@@ -88,7 +91,7 @@ class RelationService {
         val json = JSONObject()
         val jsonArray = JSONArray()
         for (userRelation in userRelationList) {
-            val account = accountService.selectAccountById(userRelation.followerId)
+            val account = accountService.idToAccount(userRelation.followerId)
             val jsonObject = JSONObject()
             jsonObject["userId"] = account!!.userId
             jsonObject["userName"] = account.userName
@@ -106,7 +109,7 @@ class RelationService {
         val json = JSONObject()
         val jsonArray = JSONArray()
         for (userRelation in userRelationList) {
-            val account = accountService.selectAccountById(userRelation.starterId)
+            val account = accountService.idToAccount(userRelation.starterId)
             val jsonObject = JSONObject()
             jsonObject["userId"] = account!!.userId
             jsonObject["userName"] = account.userName

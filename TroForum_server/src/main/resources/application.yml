@@ -11,11 +11,7 @@ spring:
     username: root
     password: 1482501212@qq
     driver-class-name: com.mysql.jdbc.Driver
-  # 连接redis
-  redis:
-    host: ruibest.club
-    port: 6379
-    password: ruibest
+
 # sa-token框架
 sa-token:
   token-name: satoken

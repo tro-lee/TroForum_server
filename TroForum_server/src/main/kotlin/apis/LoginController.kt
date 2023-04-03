@@ -5,7 +5,9 @@ import com.troForum_server.application.login.LoginService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 
-//提供进出系统的接口
+/*
+* 登录注册的接口
+ */
 @RestController
 class LoginController {
     @Autowired

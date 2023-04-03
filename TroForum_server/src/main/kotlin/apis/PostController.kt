@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
+/*
+* 帖子的接口
+ */
 @RestController
 @SaCheckLogin
 @RequestMapping("/post")

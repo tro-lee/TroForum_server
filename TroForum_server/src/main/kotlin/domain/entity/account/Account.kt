@@ -12,6 +12,8 @@ class Account {
     var role: String = ""
     var password: String = ""
     var deleted: Int = 0
+    var avatarUrl: String = ""
+    var description: String = ""
 }
 
 @Mapper

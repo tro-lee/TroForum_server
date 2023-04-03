@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service
 import org.springframework.web.socket.TextMessage
 
 
-//服务器主动推消息
+//提供WebSocket服务，消息通知在这里配置，约定好消息格式
 @Service
 class WebSocketService {
     @Autowired

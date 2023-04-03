@@ -3,13 +3,17 @@ package com.troForum_server.apis
 import cn.dev33.satoken.annotation.SaCheckLogin
 import com.alibaba.fastjson.JSONObject
 import com.troForum_server.application.account.AccountService
-import com.troForum_server.application.relation.RelationService
 import com.troForum_server.infrastructure.common.result
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.multipart.MultipartFile
 
+/*
+* 用户信息的接口
+ */
 @RestController
 @SaCheckLogin
 class AccountController {
@@ -19,11 +23,7 @@ class AccountController {
     //查询用户信息
     @PostMapping("/selectAccount")
     fun selectAccount() = result {
-        val account = accountService.selectAccount()
-        val json = JSONObject()
-        json["userId"] = account!!.userId
-        json["userName"] = account.userName
-        return@result json
+        return@result accountService.selectAccount()
     }
 
     //查询用户信息
@@ -75,5 +75,20 @@ class AccountController {
     @PostMapping("/updatePassword")
     fun updatePassword(@RequestBody req: UpdatePasswordReq) = result {
         return@result accountService.updatePassword(req.password)
+    }
+
+    //更新头像
+    @PostMapping("/updateAvatar")
+    fun updateAvatar(@RequestParam("avatar") avatar: MultipartFile) = result {
+        return@result accountService.updateAvatar(avatar)
+    }
+
+    //更新描述
+    class UpdateDescriptionReq {
+        val description: String = ""
+    }
+    @PostMapping("/updateDescription")
+    fun updateDescription(@RequestBody req: UpdateDescriptionReq) = result {
+        return@result accountService.updateDescription(req.description)
     }
 }

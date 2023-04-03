@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 import java.time.Instant
 
+/*
+* 聊天的接口
+ */
 @RestController
 @SaCheckLogin
 class ChatController {
@@ -61,6 +64,12 @@ class ChatController {
         }
         if (req.content.isEmpty()) {
             throw Exception("没有内容")
+        }
+        //统一处理relationId,进行字符串排序
+        val relationId = if (req.relationId.split("-")[0] > req.relationId.split("-")[1]) {
+            req.relationId.split("-")[1] + "-" + req.relationId.split("-")[0]
+        } else {
+            req.relationId
         }
         return@result privateChatService.insertPrivateChat(req.content, req.relationId)
     }

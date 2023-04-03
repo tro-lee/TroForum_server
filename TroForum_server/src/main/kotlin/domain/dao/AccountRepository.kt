@@ -6,7 +6,9 @@ import com.troForum_server.domain.entity.account.Account
 import com.troForum_server.domain.entity.account.AccountMapper
 import org.springframework.stereotype.Repository
 
-//账号的仓库类，提供基本操作服务
+/*
+* 账号的管理类，提供最基本的账号操作
+ */
 @Repository
 class AccountRepository(val accountMapper: AccountMapper) {
     fun selectAccountByName(userName: String): Account? {

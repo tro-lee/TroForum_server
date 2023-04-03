@@ -14,6 +14,9 @@ import org.springframework.stereotype.Service
 import java.time.Instant
 import java.time.format.DateTimeFormatter
 
+/*
+*公共聊天的服务层，接受并记录聊天信息并发送给所有人
+ */
 @Service
 class PublicChatService {
     @Autowired
@@ -30,7 +33,9 @@ class PublicChatService {
         json["authorId"] = publicChat.authorId
         json["content"] = publicChat.content
         json["createdTime"] = publicChat.createdTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
-        json["userName"] = accountService.selectAccountById(publicChat.authorId)?.userName
+        val account = accountService.idToAccount(publicChat.authorId)
+        json["authorName"] = account!!.userName
+        json["authorAvatarUrl"] = account.avatarUrl
         return json
     }
 
