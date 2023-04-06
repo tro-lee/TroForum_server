@@ -120,9 +120,9 @@ class PostService {
                     run {
                         val json = JSONObject.toJSON(item) as JSONObject
                         json["ReplyName"] = accountService.idToAccount(it.authorId)!!.userName
-                        json["userName"] = accountService.idToAccount(it.authorId)!!.userName
-                        json["userId"] = it.authorId
-                        json["avatarUrl"] = accountService.idToAccount(it.authorId)!!.avatarUrl
+                        json["userName"] = accountService.idToAccount(item.authorId)!!.userName
+                        json["userId"] = item.authorId
+                        json["avatarUrl"] = accountService.idToAccount(item.authorId)!!.avatarUrl
                         json["createdTime"] = item.createdTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
                         replyData.add(json)
                     }
