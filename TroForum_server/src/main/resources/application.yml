@@ -7,14 +7,16 @@ server:
 spring:
   # 连接mysql
   datasource:
-    url: jdbc:mysql://43.143.151.29:3306/TroForum?useUnicode=true&characterEncoding=UTF-8&useSSL=false&allowPublicKeyRetrieval=true&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2B8
+    url: jdbc:mysql://mysql-latest:3306/TroForum?useUnicode=true&characterEncoding=UTF-8&useSSL=false&allowPublicKeyRetrieval=true&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2B8
     username: root
     password: 1482501212@qq
-    driver-class-name: com.mysql.jdbc.Driver
+    driver-class-name: com.mysql.cj.jdbc.Driver
   servlet:
     multipart:
       max-request-size: 5MB
       max-file-size: 5MB
+  jmx:
+    enabled: false
 
 # sa-token框架
 sa-token:
