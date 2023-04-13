@@ -5,8 +5,10 @@ import com.alibaba.fastjson.JSONArray
 import com.alibaba.fastjson.JSONObject
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page
 import com.troForum_server.application.account.AccountService
+import com.troForum_server.application.websocket.SystemMessage
 import com.troForum_server.application.websocket.WebSocketService
 import com.troForum_server.domain.dao.ChatRepository
+import com.troForum_server.domain.dao.RelationRepository
 import com.troForum_server.domain.entity.chat.PrivateChat
 import com.troForum_server.infrastructure.common.toJsonWrapper
 import org.springframework.beans.factory.annotation.Autowired
@@ -25,6 +27,8 @@ class PrivateChatService {
     lateinit var chatRepository: ChatRepository
     @Autowired
     lateinit var accountService: AccountService
+    @Autowired
+    lateinit var relationRepository: RelationRepository
 
     //privateChat转json
     fun privateChatToJson(privateChat: PrivateChat): JSONObject {
@@ -57,6 +61,18 @@ class PrivateChatService {
 
         //当前消息发送给大家
         webSocketService.sendFriendMessage(privateChatToJson(privateChat).toJSONString(), relationId)
+        //通知某个用户，由于发送私聊一定存在关注关系，所以不需要检查
+        var relationId2 = if (!relationRepository.checkingUserRelation(relationId)) {
+            //反向处理relationId
+            relationId.split("-")[1] + "-" + relationId.split("-")[0]
+        } else {
+            relationId
+        }
+        val userRelation = relationRepository.getUserRelation(relationId2)
+        val systemMessage = SystemMessage()
+        systemMessage.targetId = if (userRelation.starterId == privateChat.authorId) userRelation.followerId else userRelation.starterId
+        systemMessage.content = "${accountService.idToAccount(privateChat.authorId)!!.userName}给你发了一条私聊消息"
+        webSocketService.sendSystem(systemMessage)
     }
 
     //获取私聊页

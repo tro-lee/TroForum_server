@@ -3,6 +3,8 @@ package com.troForum_server.application.relation
 import com.alibaba.fastjson.JSONArray
 import com.alibaba.fastjson.JSONObject
 import com.troForum_server.application.account.AccountService
+import com.troForum_server.application.websocket.SystemMessage
+import com.troForum_server.application.websocket.WebSocketService
 import com.troForum_server.domain.dao.RelationRepository
 import com.troForum_server.domain.entity.realtion.UserRelation
 import org.springframework.beans.factory.annotation.Autowired
@@ -26,6 +28,9 @@ class RelationService {
 
     @Autowired
     private lateinit var accountService: AccountService
+
+    @Autowired
+    private lateinit var webSocketService: WebSocketService
 
     //加工关系id
     fun processRelationId(userId: String, followerId: String): String {
@@ -70,6 +75,13 @@ class RelationService {
         } catch (e: Exception) {
             return false
         }
+
+        //通知被关注者
+        val systemMessage = SystemMessage()
+        systemMessage.targetId = followerId
+        systemMessage.content = "用户" + accountService.idToAccount(userId)!!.userName + "关注了您"
+        webSocketService.sendSystem(systemMessage)
+
         return true
     }
 

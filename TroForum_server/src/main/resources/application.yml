@@ -17,6 +17,10 @@ spring:
       max-file-size: 5MB
   jmx:
     enabled: false
+  # 时区设置
+  jackson:
+    date-format: yyyy/MM/dd HH:mm:ss
+    time-zone: GMT+8
 
 # sa-token框架
 sa-token:

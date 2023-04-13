@@ -4,14 +4,18 @@ import com.alibaba.fastjson.JSONArray
 import com.alibaba.fastjson.JSONObject
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page
 import com.troForum_server.application.account.AccountService
+import com.troForum_server.application.websocket.SystemMessage
+import com.troForum_server.application.websocket.WebSocketService
 import com.troForum_server.domain.entity.post.ReplyPost
 import com.troForum_server.domain.entity.post.TopicPost
 import com.troForum_server.domain.dao.PostRepository
+import com.troForum_server.domain.dao.RelationRepository
 import com.troForum_server.infrastructure.common.toJsonWrapper
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.time.Instant
 import java.time.format.DateTimeFormatter
+import javax.management.relation.RelationService
 
 /*
 * 帖子服务层，分为主题帖和回复帖
@@ -24,6 +28,11 @@ class PostService {
     @Autowired
     private lateinit var accountService: AccountService
 
+    @Autowired
+    private lateinit var relationRepository: RelationRepository
+
+    @Autowired
+    private lateinit var webSocketService: WebSocketService
     //主题帖
 
     //插入主题帖
@@ -38,6 +47,15 @@ class PostService {
         topicPost.content = content
         topicPost.title = title
         postRepository.insertTopicPost(topicPost)
+
+        //获取关注列表，对关注列表用户依次通知
+        val relationList = relationRepository.getFollowedList(authorId)
+        relationList.forEach {
+            val systemMessage = SystemMessage()
+            systemMessage.targetId = it.starterId
+            systemMessage.content = "您的关注${accountService.idToAccount(authorId)!!.userName}发布了新的主题帖"
+            webSocketService.sendSystem(systemMessage)
+        }
     }
 
     fun Page<TopicPost>.toJson(): JSONObject {
@@ -104,6 +122,17 @@ class PostService {
             throw Exception("发帖失败")
         }
 
+        //通知被回复者
+        val systemMessage = SystemMessage()
+        systemMessage.targetId = master
+        systemMessage.content = "您的帖子被${accountService.idToAccount(authorId)!!.userName}回复了"
+        webSocketService.sendSystem(systemMessage)
+
+        //通知回复回复者
+        val systemMessage2 = SystemMessage()
+        systemMessage2.targetId = masterUserId
+        systemMessage2.content = "您的回复被${accountService.idToAccount(authorId)!!.userName}回复了"
+        webSocketService.sendSystem(systemMessage2)
     }
 
     //获取回复帖
