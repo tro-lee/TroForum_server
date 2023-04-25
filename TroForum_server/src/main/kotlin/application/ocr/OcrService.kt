@@ -13,8 +13,8 @@ import org.springframework.stereotype.Service
 @Service
 class OcrService {
     fun ocr(img: String): String{
-        val tsecretId = "AKID0tcCbomXDm9LMAmGSRFuOgjjX7lJl03j"
-        val tsecretKey = "oRr33b3INcqsfP7lNtUu9B0c2Qjx5MSJ"
+        val tsecretId = "秘密"
+        val tsecretKey = "秘密"
 
         try {
             //配置参数
