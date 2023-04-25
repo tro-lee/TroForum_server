@@ -1,2 +1,5 @@
 
 *.yml
+usr/local/ca/ca.pem
+usr/local/ca/cert.pem
+usr/local/ca/key.pem

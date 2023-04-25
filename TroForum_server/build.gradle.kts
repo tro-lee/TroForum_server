@@ -42,6 +42,8 @@ dependencies {
 	implementation("cn.dev33:sa-token-spring-boot-starter:1.30.0")
 	// json
 	implementation("com.alibaba:fastjson:1.2.79")
+    //腾讯OCR
+    implementation("com.tencentcloudapi:tencentcloud-sdk-java:3.1.94")
 }
 
 tasks.withType<KotlinCompile> {
